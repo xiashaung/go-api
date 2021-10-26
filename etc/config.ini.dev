@@ -1,0 +1,23 @@
+[server]
+model = debug
+host = 127.0.0.1
+port = 8901
+time_format = 2006-01-02 15:04:05
+
+[redis]
+host = 127.0.0.1
+port = 6379
+password = 123456
+
+[database]
+#多个主或者多个从 以 ; 分隔开组装数据
+#user:password@tcp(ip:port)/dbname?charset=utf8mb4&parseTime=True&loc=Local
+master_dsn =
+slave_dsn =
+
+[miniprogram]
+app_id =
+app_secret =
+
+[rabbitmq]
+url =
