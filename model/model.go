@@ -2,7 +2,6 @@ package model
 
 import (
 	"database/sql"
-	"github.com/sirupsen/logrus"
 	"go-api/lib"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -20,7 +19,6 @@ var (
 
 func init() {
 	master_dsn := lib.Db.MasterDsn[0]
-	logrus.Debug(master_dsn)
 	master_dsns := lib.Db.MasterDsn
 	slave_dsns := lib.Db.SlaveDsn
 	var dialectors []gorm.Dialector

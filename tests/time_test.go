@@ -1,20 +1,23 @@
 package tests
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestDatetime(t *testing.T) {
 	res := 1+1
-	t.Log(res)
+	assert.Equal(t, res,2)
+
 }
 
 func TestIndex(t *testing.T)  {
 	w := TestCase.GetRequest("/",nil)
-	t.Log(w.Body.String())
+	assert.Equal(t, w.Code,200)
+	assert.Equal(t, w.Body.String(),"这是首页")
 }
 
 func TestTimenow(t *testing.T)  {
 	w := TestCase.GetRequest("/time/now",nil)
-	t.Log(w.Body.String())
+	assert.Equal(t, w.Code,200)
 }

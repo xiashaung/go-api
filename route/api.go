@@ -20,7 +20,8 @@ func InitApiRoute(r *gin.Engine) {
 	r.GET("/queue/producer", api.QueueProducer)
 	r.GET("/shop/info", api.GetShopInfo)
 	r.GET("/queue/test", api.QueueTest)
-	r.GET("/", func(context *gin.Context) {
-		context.String(http.StatusOK,"这是首页")
+	r.GET("/ws/connect", api.WsConnect)
+	r.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK,"这是首页")
 	})
 }

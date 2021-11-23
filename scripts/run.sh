@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-cd /home/www/api/
+go build go-api
 
-./go-api
+./go-api -config_path /users/xiashuang/Desktop/haofeng/go-api/et/config.ini
 

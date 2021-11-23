@@ -14,21 +14,45 @@ type Queue struct {
 	QueueName    string
 }
 
+
+
+type consumerConfig struct {
+	QueueName string
+	ConsumerName string
+	Handle consumerHandle
+}
+
 //消费函数
-type consumerHandle func(string) int
+type consumerHandle func(string,consumerConfig) int
 
 var (
-	QueueConn *amqp.Connection
+	QueueConn      *amqp.Connection
+	MqStatus       string
+	MqHandleSucess int = 1
+	MqHandleFail   int = 0
 )
+var consumers =  []consumerConfig{
+	consumerConfig{"test_queue","test_consumer",testHandle},
+	consumerConfig{"test_queue1","test_consumer1",testHandle},
+}
+
+func testHandle(s string,c consumerConfig) int  {
+	logrus.Info(s)
+	logrus.Info(c.QueueName)
+	if s == "" {
+		return MqHandleFail
+	}
+	return MqHandleSucess //成功是返回1 失败时返回0
+}
 
 func init() {
 	url := GetConfig("rabbitmq", "url", "")
-	if url != "" {
-		QueueConn, _ = amqp.Dial("amqp://admin:admin@localhost:5672/")
-		RunConsumer("test_queue", "test_consumer", func(s string) int {
-			logrus.Info(s)
-			return 1 //成功是返回1 失败时返回0
-		})
+	MqStatus = GetConfig("rabbitmq", "status", "0")
+	if MqStatusOn() {
+		QueueConn, _ = amqp.Dial(url)
+		for _, consumer := range consumers {
+			RunConsumer(consumer)
+		}
 	}
 }
 
@@ -47,7 +71,7 @@ func InitProducer(exchange string, queueName string, queueKey string) Queue {
 
 //发送消息
 func (q Queue) Send(msg string) {
-	q.Channel.Publish(q.ExchangeName, q.Queuekey, true, false, amqp.Publishing{
+	_ = q.Channel.Publish(q.ExchangeName, q.Queuekey, true, false, amqp.Publishing{
 		Timestamp:    time.Now(),
 		DeliveryMode: amqp.Persistent,
 		ContentType:  "text/plain",
@@ -64,23 +88,30 @@ func InitConsumer(queueName string, consumerName string) <-chan amqp.Delivery {
 }
 
 //启动一个消费者
-func RunConsumer(queueName string, consumerName string, callback consumerHandle) {
-	consumer := InitConsumer(queueName, consumerName)
+func RunConsumer(c consumerConfig) {
+	consumer := InitConsumer(c.QueueName, c.ConsumerName)
+	logrus.Info("队列开启: ",c.ConsumerName)
 	go func() {
 		for {
 			m, ok := <-consumer
 			if ok {
-				res := callback(string(m.Body))
+				res := c.Handle(string(m.Body),c)
 				if res > 0 {
 					if err := m.Ack(true); err != nil {
 						logrus.Info(err)
 					}
 				}
-
-			} else {
-				logrus.Info("channel closed")
-				break
+			}else{
+				time.Sleep(time.Duration(2)*time.Second)
 			}
 		}
 	}()
+}
+
+func MqStatusOn() bool {
+	return MqStatus == "1"
+}
+
+func MqStatusOff() bool {
+	return MqStatus == "0"
 }

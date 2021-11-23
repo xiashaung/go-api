@@ -10,13 +10,17 @@ require (
 	github.com/gobuffalo/logger v1.0.4 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/gomodule/redigo v1.8.1 // indirect
+	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/lib/pq v1.10.2 // indirect
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
+	github.com/silenceper/gowatch v1.5.1 // indirect
 	github.com/silenceper/wechat/v2 v2.0.0 // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/smallnest/gen v0.9.29 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/streadway/amqp v1.0.0 // indirect
+	github.com/stretchr/testify v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/term v0.0.0-20210615171337-6886f2dfbf5b // indirect
 	gopkg.in/ini.v1 v1.62.0

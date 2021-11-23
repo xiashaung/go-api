@@ -3,9 +3,13 @@ package lib
 import (
 	"github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
-	"log"
 	"strings"
 )
+
+type app struct {
+	AppPath string //项目目录
+	ConfigPath string // 配置文件目录
+}
 
 type db struct {
 	MasterDsn []string
@@ -36,12 +40,16 @@ var (
 	Db        db
 	RedisConf redis
 	MpConf    mpConf
+	App       app
 )
+
+var ConfigPath = "/users/xiashuang/Desktop/haofeng/go-api/etc/config.ini"
+
+var APP_APTH = "/users/xiashuang/Desktop/haofeng/go-api/"
 
 func init() {
 	var err error
-	var config_file = GetCurrentPath() + "/etc/config.ini"
-	cfg, err = ini.Load(config_file)
+	cfg, err = ini.Load(ConfigPath)
 	if err != nil {
 		logrus.Info(err)
 	}
@@ -78,13 +86,6 @@ func loadMp() {
 	sec := GetSection("miniprogram")
 	MpConf.AppId = sec.Key("app_id").MustString("")
 	MpConf.AppSecret = sec.Key("app_secret").MustString("")
-}
-
-func loadApp() {
-	_, err := cfg.GetSection("app")
-	if err != nil {
-		log.Fatalf("Fail to get section 'app': %v", err)
-	}
 }
 
 func GetConfig(section string, key string, def string) string {

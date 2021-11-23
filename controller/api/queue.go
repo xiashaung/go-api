@@ -2,13 +2,16 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"go-api/lib"
+	"net/http"
 )
 
 func QueueProducer(c *gin.Context) {
 	message := c.Query("msg")
-	producer := lib.InitProducer("test_exchange", "test_queue", "test_key")
+	exchange := c.Query("exchange")
+	queue := c.Query("queue")
+	queueKey := c.Query("queue_key")
+	producer := lib.InitProducer(exchange, queue, queueKey)
 	producer.Send(message)
 }
 
