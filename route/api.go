@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func InitApiRoute(r *gin.Engine) {
+func InitApiRoute(r *gin.Engine) *gin.Engine {
 	//时间api
 	timeApi := r.Group("/time")
 	timeApi.POST("/timestamp", api.ToTimestamp)
@@ -21,7 +21,9 @@ func InitApiRoute(r *gin.Engine) {
 	r.GET("/shop/info", api.GetShopInfo)
 	r.GET("/queue/test", api.QueueTest)
 	r.GET("/ws/connect", api.WsConnect)
+	r.GET("/ws/TestGet", api.TestGet)
 	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK,"这是首页")
+		c.String(http.StatusOK, "这是首页")
 	})
+	return r
 }
