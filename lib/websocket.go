@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"go-api/event"
 	"log"
 	"net/http"
 	"reflect"
@@ -28,9 +29,7 @@ func WsConnection(c *gin.Context, userId string) {
 	go func() {
 		var uid = userId
 		WsConnections[uid] = ws
-		log.Println("上线啦!", uid)
-		log.Println("在线人数:", len(WsConnections))
-
+		event.UserOnelineEvent(uid)
 		defer ws.Close()
 		//ws.WriteMessage(websocket.TextMessage,(byte)user_id)
 		for {
@@ -46,8 +45,6 @@ func WsConnection(c *gin.Context, userId string) {
 				break
 			}
 			sendTo := decode["send_to"]
-			log.Println(decode)
-			log.Println(sendTo)
 			if sendTo != nil {
 				sendTo := sendTo.(string)
 				var sendMsg = make(map[string]interface{})
@@ -65,6 +62,7 @@ func WsConnection(c *gin.Context, userId string) {
 			}
 		}
 		delete(WsConnections, uid)
+		event.UserOfflineEvent(uid)
 	}()
 }
 

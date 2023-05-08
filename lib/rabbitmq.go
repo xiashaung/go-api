@@ -14,16 +14,14 @@ type Queue struct {
 	QueueName    string
 }
 
-
-
 type consumerConfig struct {
-	QueueName string
+	QueueName    string
 	ConsumerName string
-	Handle consumerHandle
+	Handle       consumerHandle
 }
 
 //消费函数
-type consumerHandle func(string,consumerConfig) int
+type consumerHandle func(string, consumerConfig) int
 
 var (
 	QueueConn      *amqp.Connection
@@ -31,12 +29,12 @@ var (
 	MqHandleSucess int = 1
 	MqHandleFail   int = 0
 )
-var consumers =  []consumerConfig{
-	consumerConfig{"test_queue","test_consumer",testHandle},
-	consumerConfig{"test_queue1","test_consumer1",testHandle},
+var consumers = []consumerConfig{
+	consumerConfig{"test_queue", "test_consumer", testHandle},
+	consumerConfig{"test_queue1", "test_consumer1", testHandle},
 }
 
-func testHandle(s string,c consumerConfig) int  {
+func testHandle(s string, c consumerConfig) int {
 	logrus.Info(s)
 	logrus.Info(c.QueueName)
 	if s == "" {
@@ -46,14 +44,14 @@ func testHandle(s string,c consumerConfig) int  {
 }
 
 func init() {
-	url := GetConfig("rabbitmq", "url", "")
-	MqStatus = GetConfig("rabbitmq", "status", "0")
-	if MqStatusOn() {
-		QueueConn, _ = amqp.Dial(url)
-		for _, consumer := range consumers {
-			RunConsumer(consumer)
-		}
-	}
+	//url := GetConfig("rabbitmq", "url", "")
+	//MqStatus = GetConfig("rabbitmq", "status", "0")
+	//if MqStatusOn() {
+	//	QueueConn, _ = amqp.Dial(url)
+	//	for _, consumer := range consumers {
+	//		RunConsumer(consumer)
+	//	}
+	//}
 }
 
 //初始化一个生产者
@@ -90,19 +88,19 @@ func InitConsumer(queueName string, consumerName string) <-chan amqp.Delivery {
 //启动一个消费者
 func RunConsumer(c consumerConfig) {
 	consumer := InitConsumer(c.QueueName, c.ConsumerName)
-	logrus.Info("队列开启: ",c.ConsumerName)
+	logrus.Info("队列开启: ", c.ConsumerName)
 	go func() {
 		for {
 			m, ok := <-consumer
 			if ok {
-				res := c.Handle(string(m.Body),c)
+				res := c.Handle(string(m.Body), c)
 				if res > 0 {
 					if err := m.Ack(true); err != nil {
 						logrus.Info(err)
 					}
 				}
-			}else{
-				time.Sleep(time.Duration(2)*time.Second)
+			} else {
+				time.Sleep(time.Duration(2) * time.Second)
 			}
 		}
 	}()

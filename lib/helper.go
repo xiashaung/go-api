@@ -1,11 +1,16 @@
 package lib
 
 import (
+	"errors"
 	"log"
 	"os"
 	"reflect"
 	"strings"
 )
+
+func Error(msg string) error {
+	return errors.New(msg)
+}
 
 func GetCurrentPath() string {
 	dir, err := os.Getwd()
@@ -15,7 +20,7 @@ func GetCurrentPath() string {
 	return strings.Replace(dir, "\\", "/", -1)
 }
 
-func arrHasKey(arr interface{},key interface{}) {
+func arrHasKey(arr interface{}, key interface{}) {
 	if reflect.TypeOf(arr).Name() == "array" {
 	}
 }

@@ -1,9 +1,9 @@
 [server]
 model = debug
 host = 127.0.0.1
-port = 8901
+port = 8902
 time_format = 2006-01-02 15:04:05
-app_path = /users/xiashuang/Desktop/haofeng/go-api/
+app_path = /home/www/api_code/go-api/
 
 [redis]
 host = 127.0.0.1
@@ -11,14 +11,13 @@ port = 6379
 password = 123456
 
 [database]
-#多个主或者多个从 以 ; 分隔开组装数据
-#user:password@tcp(ip:port)/dbname?charset=utf8mb4&parseTime=True&loc=Local
-master_dsn =
+master_dsn = root:root@tcp(127.0.0.1:3380)/chat?charset=utf8mb4&parseTime=True&loc=Local
 slave_dsn =
 
 [miniprogram]
-app_id =
-app_secret =
+app_id = wxa3c37ebbb5107251
+app_secret = 47d8a9982f037db12575b2687561876b
 
 [rabbitmq]
-url =
+url = amqp://admin:admin@localhost:5672/
+status=0

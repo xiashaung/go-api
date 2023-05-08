@@ -1,13 +1,15 @@
 package lib
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
+	"log"
 	"strings"
 )
 
 type app struct {
-	AppPath string //项目目录
+	AppPath    string //项目目录
 	ConfigPath string // 配置文件目录
 }
 
@@ -47,9 +49,13 @@ var ConfigPath = "/users/xiashuang/Desktop/haofeng/go-api/etc/config.ini"
 
 var APP_APTH = "/users/xiashuang/Desktop/haofeng/go-api/"
 
+var R *gin.Engine
+
 func init() {
+	R = gin.New()
 	var err error
 	cfg, err = ini.Load(ConfigPath)
+	log.Println(ConfigPath)
 	if err != nil {
 		logrus.Info(err)
 	}

@@ -8,19 +8,18 @@ import (
 	"go-api/lib"
 	"go-api/route"
 	"log"
+	"path"
+	"runtime"
 	"syscall"
 )
 
 func setParams() {
-	var config_path = flag.String("config_path", "", "指定配置文件目录")
-	var app_path = flag.String("app_path", "", "指定app目录")
+	appPath := getAppPath()
+	var config_path = flag.String("config_path", appPath+"/etc/config.ini", "指定配置文件目录")
+	var app_path = flag.String("app_path", appPath, "指定app目录")
 	flag.Parse()
-	if *config_path != "" {
-		lib.ConfigPath = *config_path
-	}
-	if *app_path != "" {
-		lib.APP_APTH = *app_path
-	}
+	lib.ConfigPath = *config_path
+	lib.APP_APTH = *app_path
 }
 
 func main() {
@@ -28,11 +27,10 @@ func main() {
 	gin.SetMode(lib.Server.Model)
 	serverPort := fmt.Sprintf("%s:%d", lib.Server.Host, lib.Server.Port)
 	log.Printf(serverPort)
-	r := gin.New()
-	r = route.InitApiRoute(r)
+	route.InitApiRoute(lib.R)
 	//r.Run()
-	r.LoadHTMLGlob("/users/xiashuang/go/src/awesomeProject/src/htmls/**/*")
-	server := endless.NewServer(serverPort, r)
+	//r.LoadHTMLGlob("/users/xiashuang/go/src/awesomeProject/src/htmls/**/*")
+	server := endless.NewServer(serverPort, lib.R)
 	server.BeforeBegin = func(add string) {
 		log.Printf("pid 是: %d", syscall.Getpid())
 	}
@@ -40,4 +38,13 @@ func main() {
 	if err != nil {
 		log.Println(err.Error())
 	}
+}
+
+func getAppPath() string {
+	var appPath string
+	_, filname, _, ok := runtime.Caller(0)
+	if ok {
+		appPath = path.Dir(filname)
+	}
+	return appPath
 }
