@@ -39,7 +39,7 @@ func (t userService) FindByMobile(mobile string) (model.User, error) {
 	if user.Id != 0 {
 		return user, nil
 	}
-	return user, lib.Error("未找到该用户")
+	return user, lib.Helper.Error("未找到该用户")
 
 }
 

@@ -66,7 +66,26 @@ func WsConnection(c *gin.Context, userId string) {
 	}()
 }
 
-/**
+// 发送websocket信息
+func SendMessage(uid int, message string) error {
+	conn := WsConnections[string(uid)]
+	if conn == nil {
+		return Helper.Error("用户已下线")
+	}
+	var sendMsg = make(map[string]interface{})
+	sendMsg["from"] = uid
+	sendMsg["message"] = message
+	sendMsg["name"] = "测试"
+	msg, _ := json.Marshal(sendMsg)
+	err := conn.WriteMessage(websocket.BinaryMessage, msg)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+/*
+*
 判断是否在线
 */
 func isWsOnline(uid string) bool {

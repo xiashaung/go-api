@@ -12,5 +12,5 @@ func MpAuth(c *gin.Context) {
 
 	session, _ := lib.Minprogram.GetAuth().Code2Session(code)
 	data, _ := lib.Minprogram.GetEncryptor().Decrypt(session.SessionKey, encryptedData, iv)
-	lib.SuccessJson(c, data)
+	lib.Resp.SuccessJson(c, data)
 }

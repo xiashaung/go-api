@@ -34,14 +34,14 @@ func (t UserApi) list(c *gin.Context) {
 	_ = c.Bind(&t)
 	v := model.User{}
 	_ = c.Bind(&v)
-	lib.SuccessJson(c, service.UserService.List(t.Page, t.Size, &v))
+	lib.Resp.SuccessJson(c, service.UserService.List(t.Page, t.Size, &v))
 }
 
 // 根据主键Id查询记录
 func (t UserApi) one(c *gin.Context) {
 	var v model.User
 	_ = c.Bind(&v)
-	lib.SuccessJson(c, service.UserService.One(v.Id))
+	lib.Resp.SuccessJson(c, service.UserService.One(v.Id))
 }
 
 // 修改记录
@@ -49,7 +49,7 @@ func (t UserApi) update(c *gin.Context) {
 	var v model.User
 	_ = c.Bind(&v)
 	service.UserService.Update(v)
-	lib.SuccessMsg(c, "修改成功！")
+	lib.Resp.SuccessMsg(c, "修改成功！")
 }
 
 // 插入记录
@@ -58,16 +58,16 @@ func (t UserApi) insert(c *gin.Context) {
 	_ = c.Bind(&v)
 	user, _ := service.UserService.FindByMobile(v.Mobile)
 	if user.Id > 0 {
-		lib.ErrorJson(c, 101, "该用户已存在")
+		lib.Resp.ErrorJson(c, 101, "该用户已存在")
 		return
 	}
 	service.UserService.Insert(v)
-	lib.SuccessMsg(c, "插入成功！")
+	lib.Resp.SuccessMsg(c, "插入成功！")
 }
 
 // 根据主键删除
 func (t UserApi) delete(c *gin.Context) {
 	_ = c.Bind(&t)
 	service.UserService.Delete(t.Ids)
-	lib.SuccessMsg(c, "删除成功！")
+	lib.Resp.SuccessMsg(c, "删除成功！")
 }
