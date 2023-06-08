@@ -58,7 +58,6 @@ func WsConnection(c *gin.Context, userId string) {
 						log.Printf("WriteMessage err: %s", err.Error())
 					}
 				}
-
 			}
 		}
 		delete(WsConnections, uid)
